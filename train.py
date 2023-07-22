@@ -1,27 +1,19 @@
 from sklearn.preprocessing import MinMaxScaler
-
-from sklearn.model_selection import train_test_split
-from keras.models import Sequential, Model
-from keras.layers import LSTM, Dropout, Dense, TimeDistributed, Input, Activation, concatenate
+from keras.models import Model
+from keras.layers import LSTM, Dense, Input, Activation
 from keras import optimizers
-from keras.callbacks import History
-import tensorflow as tf
 import matplotlib.pyplot as plt
 import yfinance as yf
-import pandas as pd
 import pandas_ta as ta
 import numpy as np
 
-pd.set_option('display.max_columns', None)
-
-#data = yf.download("AAPL", start="2015-01-01", end="2020-01-01")
 data = yf.download(tickers = 'AMZN', start = '2000-01-01',end = '2020-01-01')
 
 data['Target'] = data['Adj Close'] - data.Open
 data['Target'] = data['Target'].shift(-1)
 
 data['TargetNextClose'] = data['Adj Close'].shift(-1)
-print(data.Close)
+
 data['RSI'] = ta.rsi(data['Adj Close'], length=15)
 data['SMA'] = ta.sma(data['Adj Close'], length=15)
 data["EMAF"] = ta.ema(data['Adj Close'], length=20)
