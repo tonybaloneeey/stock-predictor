@@ -5,20 +5,11 @@ from keras.layers import LSTM, Dense, Input, Activation
 from keras import optimizers
 import matplotlib.pyplot as plt
 import yfinance as yf
-import pandas_ta as ta
 import numpy as np
 
-ticker = 'TSLA'
+ticker = 'AAPL'
 
-data = yf.download(tickers=ticker, start='2015-01-01', end='2023-08-03')
-
-data['RSI'] = ta.rsi(data.Close, length=15)
-data['EMAF'] = ta.ema(data.Close, length=20)
-data['EMAM'] = ta.ema(data.Close, length=100)
-data['EMAS'] = ta.ema(data.Close, length=150)
-
-data['Target'] = data['Adj Close'] - data.Open
-data['Target'] = data['Target'].shift(-1)
+data = yf.download(tickers=ticker, start='2020-01-01', end='2023-08-03')
 
 data['TargetNextClose'] = data['Adj Close'].shift(-1)
 
@@ -76,4 +67,4 @@ plt.plot(y_pred_scaled, color='green', label='pred')
 plt.legend()
 plt.show()
 
-model.save(ticker + '_model.keras')
+model.save("models/" + ticker + '_model.keras')
