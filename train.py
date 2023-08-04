@@ -28,11 +28,7 @@ for j in range(data.shape[1] - 2):
         X[j].append(scaled_data[i - recent_days:i, j])
 
 X = np.moveaxis(X, [0], [2])
-
-# Convert X to numpy array and yi to numpy array
 X, yi = np.array(X), np.array(scaled_data[recent_days:, -1])
-
-# Convert yi to array of [num_samples, num_output_features], and model only has 1 output feature
 y = np.reshape(yi, (len(yi), 1))
 
 train_percentage = 0.8

@@ -1,6 +1,4 @@
 import os
-import time
-from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_absolute_error
 from keras.models import Model
 from keras.layers import LSTM, Dense, Input, Activation
@@ -18,8 +16,6 @@ import streamlit as st
 pd.set_option('display.max_columns', None)
 
 def train(stock, recent_days=30, epochs=50, batch_size=10, validation_split=0.1, custom=False):
-    # st.write('Training model for', stock)
-
     data = yf.download(tickers=stock, start='2020-01-01', end='2023-08-03')
 
     data['TargetNextClose'] = data['Adj Close'].shift(-1)
@@ -38,9 +34,7 @@ def train(stock, recent_days=30, epochs=50, batch_size=10, validation_split=0.1,
             X[j].append(scaled_data[i - recent_days:i, j])
 
     X = np.moveaxis(X, [0], [2])
-
     X, yi = np.array(X), np.array(scaled_data[recent_days:, -1])
-
     y = np.reshape(yi, (len(yi), 1))
 
     train_percentage = 0.8
@@ -83,7 +77,6 @@ def train(stock, recent_days=30, epochs=50, batch_size=10, validation_split=0.1,
 
 
 def predict(stock, days=30, custom=False):
-
     predict_ticker = stock
 
     if not custom:
@@ -161,5 +154,4 @@ with col2:
         st.write("TRAINING " + model_input + " STOCK MODEL...")
         train(model_input, recent_days=slider_recent_days, epochs=slider_epochs, batch_size=slider_batch_size,
               validation_split=slider_validation_split, custom=True)
-
         st.write("Custom model for", model_input, "has been trained successfully!")
